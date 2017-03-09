@@ -33,6 +33,11 @@ class Document:
         print("Jusqu'à présent, {} documents ont été crées".format(cls.nbdocuments))
     nombreDoc = classmethod(nombreDoc)
 
+    def tokennisation(self):
+        token = list()
+
+
+        return token
 
     def __str__(self):
         return "(docno: {0}, fileid: {1})".format(self.docno,self.fileid)
