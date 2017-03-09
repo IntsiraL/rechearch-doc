@@ -5,7 +5,7 @@
 class Mot:
     """
              Attributs de la classe:
-           -la chaine de caractère representant le mot : nom
+            -la chaine de caractère representant le mot : nom
             -la liste de documents q'il contient: listDoc
             - le nombre d'occurence total du mot : nbOcc
          Methodes de la classe:
@@ -13,21 +13,24 @@ class Mot:
             -ajoutDoc(self,idDoc,occ): qui  ajout un document dans liste de documents qui le contiennent
                   -idDoc : identifiant du document
                   -occ: nombre d'occurence du mot dans le document
-              -parcoursArbre(self,a): methode de test dans l'arbre qui permet d'afficher tous les mot  de l'arbre dans l'ordre
+            -parcoursArbre(self,a): methode de test dans l'arbre qui permet d'afficher tous les mot  de l'arbre dans l'ordre
     """
             
-    def __init__(self,name):
+    def __init__(self, name):
         """
 
         :param name:
         """
-        self.nom=name
-        self.listDoc=[]
-        self.nbOcc=0
+        self.nom = name
+        self.listDoc = []
+        self.nbOcc = 0
 
-    def ajoutDoc(self,idDoc,occ):
-        infoDoc={'idDc':idDoc,'nbOcc':occ}
+    def ajoutDoc(self, idDoc, occ):
+        infoDoc = {'idDc': idDoc,'nbOcc': occ}
         self.listDoc.append(infoDoc)
+
+    def __str__(self):
+        return "[nom:{0}, nbOcc:{1}, listDoc:{2}]".format(self.nom, self.nbOcc, self.listDoc)
 
 # 2- Creation d'un Arbre Binaire des mots du dictionnaire
 
@@ -48,42 +51,42 @@ class Arbre:
     """
 
     def __init__(self):
-        self.listeNoeudFils=[]  
-        self.racineArbre=Mot("")
+        self.listeNoeudFils = []
+        self.racineArbre = Mot("")
 
-    def ajoutNoeudFils(self,fils): # Ajout d'un fils dans l'arbre
+    def ajoutNoeudFils(self, fils): # Ajout d'un fils dans l'arbre
         self.listeNoeudFils.append(fils)
 
     def estFeuille(self):
-        return (self.listeNoeudFils==[])
+        return (self.listeNoeudFils == [])
 
-    def ajoutMot(self,mot):
+    def ajoutMot(self, mot):
         #print("Parcours de :",self.racineArbre.nom)
-        if (len(self.listeNoeudFils)==0):
-            if(self.racineArbre==""):
-                A=Arbre()
-                A.racineArbre=mot
+        if (len(self.listeNoeudFils) == 0):
+            if(self.racineArbre == ""):
+                A = Arbre()
+                A.racineArbre = mot
                 self.listeNoeudFils.append(A)
             else:
-                m=self.racineArbre
-                B=Arbre()
-                B.racineArbre=m
-                A=Arbre()
-                A.racineArbre=mot
-                if (A.racineArbre.nom<B.racineArbre.nom):
+                m = self.racineArbre
+                B = Arbre()
+                B.racineArbre = m
+                A = Arbre()
+                A.racineArbre = mot
+                if (A.racineArbre.nom < B.racineArbre.nom):
                     self.listeNoeudFils.append(A)
                     self.listeNoeudFils.append(B)
                 else:
                     self.listeNoeudFils.append(B)
                     self.listeNoeudFils.append(A)
         else:
-            if (len(self.listeNoeudFils)==1):
+            if (len(self.listeNoeudFils) == 1):
                 
-                A=self.listeNoeudFils[0]
-                B=Arbre()
-                B.racineArbre=mot
-                self.listeNoeudFils=[]
-                if (A.racineArbre.nom<B.racineArbre.nom):
+                A = self.listeNoeudFils[0]
+                B = Arbre()
+                B.racineArbre = mot
+                self.listeNoeudFils = []
+                if (A.racineArbre.nom < B.racineArbre.nom):
                     self.listeNoeudFils.append(A)
                     self.listeNoeudFils.append(B)
                 else:
@@ -91,7 +94,7 @@ class Arbre:
                     self.listeNoeudFils.append(A)
                     
             else:
-                a=self.listeNoeudFils[1].racineArbre.nom
+                a = self.listeNoeudFils[1].racineArbre.nom
                 if (mot.nom<a):
                     #print("Parcours de :",self.listeNoeudFils[0].racineArbre.nom)
                     self.listeNoeudFils[0].ajoutMot(mot)
@@ -100,8 +103,8 @@ class Arbre:
                     self.listeNoeudFils[1].ajoutMot(mot)
 
     def parcoursArbre(self):
-        if (self.listeNoeudFils==[]):
-            print ( "feuille :", self.racineArbre.nom)
+        if (self.listeNoeudFils == []):
+            print ( "feuille :", self.racineArbre)
         else:
             #print ( "noeud :", self.racineArbre.nom)
             #print ("taille neoud:",len (self.listeNoeudFils))
@@ -109,38 +112,38 @@ class Arbre:
                 i.parcoursArbre()
             print ("------------------")
 
-    def estDansArbre(self,mot):
-        res=False
-        n=len((self.listeNoeudFils))
+    def estDansArbre(self, mot):
+        res = False
+        n = len((self.listeNoeudFils))
         #print("nombre de fils :",n)
-        if (n==0):
+        if (n == 0):
             #print("visite de :",self.racineArbre.nom)
-            if (mot.nom==self.racineArbre.nom):
-                res= True
+            if (mot.nom == self.racineArbre.nom):
+                res = True
         else:
-              if (n==1):
-                  res= self.listeNoeudFils[0].estDansArbre(mot)
+              if (n == 1):
+                  res = self.listeNoeudFils[0].estDansArbre(mot)
               else:
-                  if(mot.nom>=self.listeNoeudFils[1].racineArbre.nom):
-                     res=self.listeNoeudFils[1].estDansArbre(mot)
+                  if(mot.nom >= self.listeNoeudFils[1].racineArbre.nom):
+                      res = self.listeNoeudFils[1].estDansArbre(mot)
                   else:
-                      res=self.listeNoeudFils[0].estDansArbre(mot)
+                      res = self.listeNoeudFils[0].estDansArbre(mot)
         return res
     
-    def majMotArbre(self,mot):
-        if self.estDansArbre(mot)==False:
+    def majMotArbre(self, mot):
+        if self.estDansArbre(mot) == False:
             self.ajoutMot(mot)
         else:
-            n=len((self.listeNoeudFils))
-            if(n==0):
-                if (mot.nom==self.racineArbre.nom):
-                    self.racineArbre.append(mot.listDoc[0])
-                    self.racineArbre.nbOcc=self.racineArbre.nbOcc+mot.listDoc['nbOcc']
+            n = len((self.listeNoeudFils))
+            if( n == 0):
+                if (mot.nom == self.racineArbre.nom):
+                    self.racineArbre.listDoc.append(mot.listDoc[0])
+                    #self.racineArbre.nbOcc = self.racineArbre.nbOcc + mot.listDoc[0].
             else:
-                if (n==1):
+                if ( n == 1 ):
                      self.listeNoeudFils[0].majMotArbre(mot)
                 else:
-                    if(mot.nom>=self.listeNoeudFils[1].racineArbre.nom):
+                    if(mot.nom >= self.listeNoeudFils[1].racineArbre.nom):
                         self.listeNoeudFils[1].majMotArbre(mot)
                     else:
                         self.listeNoeudFils[0].majMotArbre(mot)

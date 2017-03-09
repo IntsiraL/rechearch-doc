@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from nltk.stem.porter import PorterStemmer
-from .arbre import Arbre,Mot
+from arbre import Arbre, Mot
+from importdata import *
 
 class InvertedIndex:
     """
@@ -9,5 +9,16 @@ class InvertedIndex:
 
     """
 
-    def __init__(self):
-        self.dictionnair= Arbre()
+    def __init__(self, _chemincorpus, *args):
+        self.dictionnaire = Arbre()
+        doc = DocParse(_chemincorpus)
+        stopw = list()
+        if len(args) > 0:
+            stopw = StopWord(args[0])
+        for d in doc.docList:
+            for w in d.getWord(stopw):
+                self.dictionnaire.majMotArbre(w)
+
+    def __str__(self):
+        self.dictionnaire.parcoursArbre()
+        return "Fin parcours"
