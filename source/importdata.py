@@ -70,3 +70,29 @@ class DocParse:
             l.append(doc)
 
         self.docList = l
+
+class StopWord:
+    """
+    Stocker et manipuler les stops words dans une liste
+    penser à ameliorer la structure dans une version suivante
+
+    """
+
+    def __init__(self, chemin):
+        l = list()
+        #peut être à bien vérifier que le fichier est bien ouvert et pas de probleme
+        fichier = open(chemin, "r")
+        for ligne in fichier:
+            if len(ligne)>1:
+                l.append(ligne[:(len(ligne)-1)])
+        fichier.close()
+        self.listStopWord = l
+
+    def addStopword(self,mot):
+        self.listStopWord.append(mot)
+
+    def find(self,mot):
+        return mot in self.listStopWord
+
+
+
