@@ -17,6 +17,10 @@ class Mot:
     """
             
     def __init__(self,name):
+        """
+
+        :param name:
+        """
         self.nom=name
         self.listDoc=[]
         self.nbOcc=0
@@ -24,7 +28,6 @@ class Mot:
     def ajoutDoc(self,idDoc,occ):
         infoDoc={'idDc':idDoc,'nbOcc':occ}
         self.listDoc.append(infoDoc)
-        
 
 # 2- Creation d'un Arbre Binaire des mots du dictionnaire
 

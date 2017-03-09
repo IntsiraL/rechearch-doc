@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
 from xml.dom import minidom
+from nltk.stem.porter import PorterStemmer
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+import string
+from arbre import Mot
 
 class Document:
     """
@@ -18,7 +23,7 @@ class Document:
 
     def __init__(self,_docno,_fileid,_first,_second,_head,_byline,_dateline,_text):
         Document.nbdocuments += 1
-        self.id = Document.nbdocuments #identifiant pour le doc pour être
+        self.id = Document.nbdocuments #identifiant pour le doc pour être sûr
         self.docno = _docno
         self.fileid = _fileid
         self.first = _first
@@ -33,11 +38,31 @@ class Document:
         print("Jusqu'à présent, {} documents ont été crées".format(cls.nbdocuments))
     nombreDoc = classmethod(nombreDoc)
 
-    def tokennisation(self):
-        token = list()
+    def getWord(self,*args):
+        """
+        Recupère les mots d'un document
+        :param args: Liste des stopwords personnel
+        :return: Liste des mots de ce documents
+        """
+        listWord = list()
+        porter = PorterStemmer()
+        stop_words = set(stopwords.words('english'))
+        word_tokens = word_tokenize(self.text)
+        qq = ["``","''"]
+        if len(args)>0:
+            word = [w for w in word_tokens if (not w in stop_words) and (not w in string.punctuation) and (not w in qq) and (not w in args)]
+        else:
+            word = [w for w in word_tokens if (not w in stop_words) and (not w in string.punctuation) and (not w in qq)]
+        for w in word:
+            i = 0
+            for x in word:
+                if w == x:
+                    i += 1
+            mot = Mot(porter.stem(w))
+            mot.ajoutDoc(self.docno,i)
+            listWord.append(mot)
+        return listWord
 
-
-        return token
 
     def __str__(self):
         return "(docno: {0}, fileid: {1})".format(self.docno,self.fileid)
