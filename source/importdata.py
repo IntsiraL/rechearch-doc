@@ -51,10 +51,10 @@ class Document:
         word_tokens = word_tokenize(self.text)
         qq = ["``", "''", "...", "'s"]
         if len(args) > 0:
-            word = [w for w in word_tokens if
+            word = [porter.stem(w) for w in word_tokens if
                     (not w in stop_words) and (not w in string.punctuation) and (not w in qq) and (not w in args)]
         else:
-            word = [w for w in word_tokens if (not w in stop_words) and (not w in string.punctuation) and (not w in qq)]
+            word = [porter.stem(w) for w in word_tokens if (not w in stop_words) and (not w in string.punctuation) and (not w in qq)]
         mot_exit_deja = list()
         for w in word:
             if not w in mot_exit_deja:
@@ -62,7 +62,7 @@ class Document:
                 for x in word:
                     if w == x:
                         i += 1
-                mot = Mot(porter.stem(w))
+                mot = Mot(w)
                 mot.ajoutDoc(self.id, i)
                 listWord.append(mot)
                 mot_exit_deja.append(w)
@@ -85,14 +85,16 @@ class DocParse:
                 docno = elemt.firstChild.nodeValue
             for elemt in current.getElementsByTagName("FILEID"):
                 fileid = elemt.firstChild.nodeValue
+            text = ""
             for elemt in current.getElementsByTagName("TEXT"):
-                text = elemt.firstChild.nodeValue
+                text = text + elemt.firstChild.nodeValue
             for elemt in current.getElementsByTagName("FIRST"):
                 first = elemt.firstChild.nodeValue
             for elemt in current.getElementsByTagName("SECOND"):
                 second = elemt.firstChild.nodeValue
+            dateline = list()
             for elemt in current.getElementsByTagName("DATELINE"):
-                dateline = elemt.firstChild.nodeValue
+                dateline.append(elemt.firstChild.nodeValue)
             head = list()
             for elemt in current.getElementsByTagName("HEAD"):
                 head.append(elemt.firstChild.nodeValue)
@@ -106,6 +108,18 @@ class DocParse:
 
         self.docList = l
 
+    def getDoc(self,_id):
+        """
+        Checher un document à partir de son id
+        Il faut quand même être sur que le id existe vraiment pour éviter une erreur
+        :param _id: le id du document à chercher
+        :return: Le document rechercher
+        """
+        i = 0
+        while i < len(self.docList):
+            if self.docList[i].id == _id:
+                return self.docList[i]
+            i += 1
 
 class StopWord:
     """

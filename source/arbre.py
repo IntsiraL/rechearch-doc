@@ -95,7 +95,7 @@ class Arbre:
                     
             else:
                 a = self.listeNoeudFils[1].racineArbre.nom
-                if (mot.nom<a):
+                if (mot.nom < a):
                     #print("Parcours de :",self.listeNoeudFils[0].racineArbre.nom)
                     self.listeNoeudFils[0].ajoutMot(mot)
                 else:
@@ -147,8 +147,27 @@ class Arbre:
                         self.listeNoeudFils[1].majMotArbre(mot)
                     else:
                         self.listeNoeudFils[0].majMotArbre(mot)
-                        
-                    
+
+    def recupInfoMot(self, mot_form_text):
+        mot = Mot(mot_form_text)
+        info_mot = mot
+        if self.estDansArbre(mot) == False:
+            info_mot = None
+        else:
+            n = len((self.listeNoeudFils))
+            if (n == 0):
+                if (mot.nom == self.racineArbre.nom):
+                    info_mot = self.racineArbre
+            else:
+                if (n == 1):
+                    info_mot = self.listeNoeudFils[0].recupInfoMot(mot_form_text)
+                else:
+                    if (mot.nom >= self.listeNoeudFils[1].racineArbre.nom):
+                        info_mot = self.listeNoeudFils[1].recupInfoMot(mot_form_text)
+                    else:
+                        info_mot = self.listeNoeudFils[0].recupInfoMot(mot_form_text)
+        return info_mot
+
     def __str__(self):
         print("Affichage de l'arbre")
         self.parcoursArbre()

@@ -2,7 +2,7 @@
 
 import argparse
 import os.path
-from index import InvertedIndex
+from index import InvertedIndex,Requete
 
 parser = argparse.ArgumentParser()
 parser.add_argument("d",type = str ,help="Le chemin de la document")
@@ -11,6 +11,13 @@ args = parser.parse_args()
 
 if os.path.isfile(args.d) and os.path.isfile(args.s):
    index = InvertedIndex(args.d, args.s)
-   print(index)
+   req = Requete("acquisition by the U.S. Army of specified advanced weapons systems")
+   print("----------------boolean AND-----------------")
+   print(req.booleanQuerie(index, "AND"))
+   print("----------------boolean OR-----------------")
+   print(req.booleanQuerie(index,"OR"))
+   print("----------------biword-----------------")
+   print(req.biwordQuerie(index))
+
 else:
     print("ERROR: le(s) document(s) que vous avez indiqué n'existe pas")
