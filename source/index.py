@@ -20,5 +20,5 @@ class InvertedIndex:
                 self.dictionnaire.majMotArbre(w)
 
     def __str__(self):
-        self.dictionnaire.parcoursArbre()
-        return "Fin parcours"
+        print(self.dictionnaire)
+        return ""

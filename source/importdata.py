@@ -55,14 +55,17 @@ class Document:
                     (not w in stop_words) and (not w in string.punctuation) and (not w in qq) and (not w in args)]
         else:
             word = [w for w in word_tokens if (not w in stop_words) and (not w in string.punctuation) and (not w in qq)]
+        mot_exit_deja = list()
         for w in word:
-            i = 0
-            for x in word:
-                if w == x:
-                    i += 1
-            mot = Mot(porter.stem(w))
-            mot.ajoutDoc(self.docno, i)
-            listWord.append(mot)
+            if not w in mot_exit_deja:
+                i = 0
+                for x in word:
+                    if w == x:
+                        i += 1
+                mot = Mot(porter.stem(w))
+                mot.ajoutDoc(self.id, i)
+                listWord.append(mot)
+                mot_exit_deja.append(w)
         return listWord
 
     def __str__(self):

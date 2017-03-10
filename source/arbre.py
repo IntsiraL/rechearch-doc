@@ -15,7 +15,7 @@ class Mot:
                   -occ: nombre d'occurence du mot dans le document
             -parcoursArbre(self,a): methode de test dans l'arbre qui permet d'afficher tous les mot  de l'arbre dans l'ordre
     """
-            
+
     def __init__(self, name):
         """
 
@@ -138,7 +138,7 @@ class Arbre:
             if( n == 0):
                 if (mot.nom == self.racineArbre.nom):
                     self.racineArbre.listDoc.append(mot.listDoc[0])
-                    #self.racineArbre.nbOcc = self.racineArbre.nbOcc + mot.listDoc[0].
+                    self.racineArbre.nbOcc = self.racineArbre.nbOcc + mot.listDoc[0]['nbOcc']
             else:
                 if ( n == 1 ):
                      self.listeNoeudFils[0].majMotArbre(mot)
@@ -149,7 +149,10 @@ class Arbre:
                         self.listeNoeudFils[0].majMotArbre(mot)
                         
                     
-                    
+    def __str__(self):
+        print("Affichage de l'arbre")
+        self.parcoursArbre()
+        return "Fin Parcours"
                     
             
             
