@@ -2,7 +2,8 @@
 
 import argparse
 import os.path
-from index import InvertedIndex,Requete
+from index import InvertedIndex
+from requette import Requete
 
 parser = argparse.ArgumentParser()
 parser.add_argument("d",type = str ,help="Le chemin de la document")
@@ -18,6 +19,8 @@ if os.path.isfile(args.d) and os.path.isfile(args.s):
    print(req.booleanQuerie(index,"OR"))
    print("----------------biword-----------------")
    print(req.biwordQuerie(index))
+   print("----------------vector-----------------")
+   print(req.vectorQuerie(index))
 
 else:
     print("ERROR: le(s) document(s) que vous avez indiqué n'existe pas")
