@@ -131,7 +131,7 @@ class Requete:
                             listid.append(d)
                     i += 1
                 print("biword OR")
-                return listid
+                return _index.getListDoc(listid)
         else:
             v = self.booleanQuerie(_index, "AND")
             if v != []:
@@ -161,8 +161,13 @@ class Requete:
                 su2d += wd**2
                 su2q += wq**2
                 sum += wq*wd
-            listM.append({"docId":docid, "cos":sum/(sqrt(su2q)*sqrt(su2d))})
+            if su2d != 0 and su2q != 0:
+                listM.append({"docId":docid, "cos":sum/(sqrt(su2q)*sqrt(su2d))})
         listM.sort(key = lambda x: x["cos"], reverse = True)
-        return listM
+        res = list()
+        for z in listM:
+            if z["cos"] > 0.35:
+                res.append(z["docId"])
+        return _index.getListDoc(res)
 
 

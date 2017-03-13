@@ -76,10 +76,13 @@ class DocParse:
     """Parse les documents initialement en xml"""
 
     def __init__(self, chemin):
-        global docno
         l = list()
         tree = minidom.parse(chemin)
         root = tree.documentElement
+        docno = ""
+        fileid = ""
+        first = ""
+        second = ""
         for current in root.getElementsByTagName("DOC"):
             for elemt in current.getElementsByTagName("DOCNO"):
                 docno = elemt.firstChild.nodeValue
@@ -118,8 +121,12 @@ class DocParse:
         i = 0
         while i < len(self.docList):
             if self.docList[i].id == _id:
-                return self.docList[i]
+                break
             i += 1
+        if i != len(self.docList):
+            return self.docList[i]
+        else:
+            return None
 
 class StopWord:
     """

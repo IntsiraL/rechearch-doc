@@ -19,6 +19,17 @@ class InvertedIndex:
             for w in d.getWord(stopw):
                 self.dictionnaire.majMotArbre(w)
 
+    def getListDoc(self,lisd_id):
+        """
+        Renvoie la liste des documents
+        :param lisd_id: liste des id des documents à récuperer
+        :return: La liste des documents
+        """
+        l = list()
+        for i in lisd_id:
+            l.append(self.doc.getDoc(i))
+        return l
+
     def __str__(self):
         print(self.dictionnaire)
         return ""
