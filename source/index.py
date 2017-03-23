@@ -28,7 +28,12 @@ class InvertedIndex:
         l = list()
         for i in lisd_id:
             l.append(self.doc.getDoc(i))
+        print("=> Nombre total de document retourné : {}".format(len(l)))
+        print("----------------------------------------------------------")
         return l
+
+    def getNdoc(self):
+        return Document.nbdocuments
 
     def __str__(self):
         print(self.dictionnaire)
@@ -53,8 +58,8 @@ class InvertedIndex:
                     tf = 1 + log10(m.listDoc[i]["nbOcc"])
                     break
                 i += 1
-            # calcul le idf
-            idf = log10(_N / len(m.listDoc))
+            # calcul le idf, ajout 1 en considérant que la requette forme un document
+            idf = log10(_N / (len(m.listDoc)+1))
         return tf*idf
 
 

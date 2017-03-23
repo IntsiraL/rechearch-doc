@@ -1,0 +1,3 @@
+#!/bin/bash
+python3 source/Main.py Data/AP891216.xml Data/stopwords.txt 
+exit 0

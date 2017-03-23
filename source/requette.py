@@ -3,7 +3,7 @@ from nltk.stem.porter import PorterStemmer
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from math import log10,sqrt
-import string
+import string,time
 
 class Requete:
     """
@@ -46,34 +46,43 @@ class Requete:
         listM.sort(key=lambda m: len(m.listDoc))
         if _type == "AND":
             #cherche l'intersection
-            i = 0
-            while i < len(listM[0].listDoc):
-                j = 1
-                while j < len(listM):
-                    k = 0
-                    while k < len(listM[j].listDoc):
-                        if  listM[0].listDoc[i]["idDc"] == listM[j].listDoc[k]["idDc"]:
-                            #passer au suivant
+            if len(listM) > 0:
+                i = 0
+                while i < len(listM[0].listDoc):
+                    j = 1
+                    while j < len(listM):
+                        k = 0
+                        while k < len(listM[j].listDoc):
+                            if  listM[0].listDoc[i]["idDc"] == listM[j].listDoc[k]["idDc"]:
+                                #passer au suivant
+                                break
+                            k += 1
+                        if k == len(listM[j].listDoc):
+                            #on a pas trouvé l'id
                             break
-                        k += 1
-                    if k == len(listM[j].listDoc):
-                        #on a pas trouvé l'id
-                        break
-                    j += 1
-                if j == len(listM):
-                    #j'ai trouvé
-                    listid.append(listM[0].listDoc[i]["idDc"])
-                i += 1
+                        j += 1
+                    if j == len(listM):
+                        #j'ai trouvé
+                        listid.append(listM[0].listDoc[i])
+                    i += 1
         elif _type == "OR":
-            for m in listM[-1].listDoc:
-                listid.append(m["idDc"])
-            i = 0
-            while i < len(listM)-1:
-                for d in listM[i].listDoc:
-                    if not d["idDc"] in listid:
-                        listid.append(d["idDc"])
-                i += 1
-        return listid
+            if len(listM) > 0:
+                p = list()
+                for m in listM[-1].listDoc:
+                    p.append(m["idDc"])
+                    listid.append(m)
+                i = 0
+                while i < len(listM)-1:
+                    for d in listM[i].listDoc:
+                        if not d["idDc"] in p:
+                            p.append(d["idDc"])
+                            listid.append(d)
+                    i += 1
+        # trier décroissantement la liste par rapport aux nombres d'occurence des terms
+        # selement important quand 'il y a qu'un seul terme
+        listid.sort(key=lambda m: m["nbOcc"], reverse = True)
+
+        return [i["idDc"] for i in listid]
 
     def biwordQuerie(self,_index):
         """
@@ -135,11 +144,13 @@ class Requete:
         else:
             v = self.booleanQuerie(_index, "AND")
             if v != []:
-                return v
+                return _index.getListDoc(v)
             else:
-                return self.booleanQuerie(_index, "OR")
+                return _index.getListDoc(self.booleanQuerie(_index, "OR"))
 
     def vectorQuerie(self,_index):
+        print("Requête pour : ' {} '".format(self.req))
+        debut = time.time()
         listid = self.booleanQuerie(_index, "OR")
         token = self.querieState()
         listM = list()
@@ -154,10 +165,10 @@ class Requete:
                 if _mot != None:
                     l = len(_mot.listDoc)
                 for j in token:
-                    if j in token:
+                    if j == m:
                         i += 1
-                wq = (1 + log10(i)) * log10((len(listid) + 1) / (l + 1))
-                wd = _index.tf_idfWeight(m, docid, (len(listid) + 1))
+                wq = (1 + log10(i)) * log10((_index.getNdoc() + 1) / (l + 1))
+                wd = _index.tf_idfWeight(m, docid, (_index.getNdoc() + 1))
                 su2d += wd**2
                 su2q += wq**2
                 sum += wq*wd
@@ -165,9 +176,13 @@ class Requete:
                 listM.append({"docId":docid, "cos":sum/(sqrt(su2q)*sqrt(su2d))})
         listM.sort(key = lambda x: x["cos"], reverse = True)
         res = list()
+        fin = time.time()
+        print("Le(s) document(s) retourné(s): avec la methode Vector space scoring ( cosinus(q,d) > 0.35 )")
         for z in listM:
             if z["cos"] > 0.35:
                 res.append(z["docId"])
+                print(z)
+        print("Temps de la requête : {} s".format(fin - debut))
         return _index.getListDoc(res)
 
 
